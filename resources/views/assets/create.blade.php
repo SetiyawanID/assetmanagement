@@ -1,0 +1,2 @@
+@extends('layouts.app')
+@section('content')<div class="mb-4"><a href="{{ route('assets.index') }}" class="text-secondary text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Kembali ke aset</a><div class="eyebrow mt-3">New asset</div><h1 class="page-title h2 mb-1">Tambah aset baru</h1><p class="text-secondary mb-0">Catat perangkat baru ke dalam inventaris.</p></div><div class="panel p-3 p-lg-4">@include('assets.form', ['asset' => null, 'formAction' => route('assets.store'), 'formMethod' => 'POST', 'submitLabel' => 'Simpan aset'])</div>@endsection

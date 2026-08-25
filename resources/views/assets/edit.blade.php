@@ -1,0 +1,2 @@
+@extends('layouts.app')
+@section('content')<div class="mb-4"><a href="{{ route('assets.show', $asset) }}" class="text-secondary text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Kembali ke detail</a><div class="eyebrow mt-3">Edit asset</div><h1 class="page-title h2 mb-1">Perbarui aset</h1><p class="text-secondary mb-0">{{ $asset->asset_tag }} · {{ $asset->name }}</p></div><div class="panel p-3 p-lg-4">@include('assets.form', ['formAction' => route('assets.update', $asset), 'formMethod' => 'PUT', 'submitLabel' => 'Simpan perubahan'])</div>@endsection
