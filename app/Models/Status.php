@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Status extends Model
 {
-    protected $fillable = ['name', 'icon', 'description'];
+    protected $fillable = ['name', 'slug', 'color'];
 
     public function assets(): HasMany
     {
-        return $this->hasMany(Asset::class);
+        return $this->hasMany(Asset::class, 'status', 'slug');
     }
 }

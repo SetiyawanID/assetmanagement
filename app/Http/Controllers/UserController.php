@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApprovalRequest;
 use App\Models\User;
 use App\Models\Division;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -29,12 +31,37 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users'],
             'role' => ['required', 'in:admin,user'],
             'division_id' => ['nullable', 'exists:divisions,id'],
-            'password' => ['nullable', 'required_if:role,admin', 'confirmed', 'min:8'],
         ]);
         abort_unless($data['role'] === 'user' || $request->user()->isSuperAdmin(), 403, 'Admin hanya dapat membuat akun User.');
-        $data['password'] ??= Str::random(64);
-        User::create($data);
-        return redirect()->route('dashboard')->with('success', 'Akun '.($data['role'] === 'admin' ? 'Admin' : 'User').' berhasil dibuat.');
+
+        if ($data['role'] === 'admin') {
+            $password = $request->validate([
+                'password' => ['required', 'confirmed', 'min:8'],
+            ])['password'];
+        } else {
+            // User accounts cannot access the workspace, so their password is never shown or entered.
+            $password = Str::random(64);
+        }
+
+        if ($request->user()->isSuperAdmin()) {
+            $data['password'] = $password;
+            User::create($data);
+            return redirect()->route('users.index')->with('success', 'Akun '.($data['role'] === 'admin' ? 'Admin' : 'User').' berhasil dibuat.');
+        }
+
+        ApprovalRequest::create([
+            'type' => 'user',
+            'payload' => [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'role' => 'user',
+                'division_id' => $data['division_id'] ?? null,
+                'password_hash' => Hash::make($password),
+            ],
+            'requested_by' => $request->user()->id,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'Pengajuan akun User berhasil dibuat dan menunggu approval Super Admin.');
     }
 
     public function edit(User $user): View

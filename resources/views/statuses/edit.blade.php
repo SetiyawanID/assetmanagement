@@ -1,0 +1,5 @@
+@extends('layouts.app')
+@section('content')
+<div class="mb-4"><a href="{{ route('statuses.index') }}" class="text-secondary text-decoration-none small"><i class="bi bi-arrow-left me-1"></i>Kembali ke status</a><div class="eyebrow mt-3">Asset setup</div><h1 class="page-title h2 mb-1">Edit status</h1></div>
+<div class="panel p-3 p-lg-4" style="max-width: 680px"><form method="POST" action="{{ route('statuses.update', $status) }}">@csrf @method('PUT')<div class="mb-3"><label class="form-label fw-semibold">Nama status *</label><input class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $status->name) }}" required>@error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="mb-3"><label class="form-label fw-semibold">Warna status *</label><input class="form-control form-control-color" type="color" name="color" value="{{ old('color', $status->color) }}" title="Pilih warna status" required></div><div class="text-end pt-3 border-top"><button class="btn btn-primary"><i class="bi bi-check-lg me-2"></i>Simpan perubahan</button></div></form></div>
+@endsection
