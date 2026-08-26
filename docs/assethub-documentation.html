@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dokumentasi AssetHub</title>
+    <style>
+        :root { --ink:#241a36; --muted:#6d6280; --line:#e6dff0; --purple:#6943c5; --deep:#281344; --soft:#f7f3ff; --code:#21152f; }
+        * { box-sizing:border-box; }
+        body { margin:0; color:var(--ink); background:#fbfaff; font:15px/1.65 Arial, sans-serif; }
+        header { padding:58px 24px; color:white; background:linear-gradient(135deg,#281344,#6943c5); }
+        .wrap { width:min(1080px,calc(100% - 40px)); margin:auto; }
+        h1,h2,h3 { line-height:1.25; } h1 { margin:0 0 10px; font-size:clamp(30px,5vw,52px); } h2 { margin-top:48px; padding-bottom:10px; border-bottom:1px solid var(--line); } h3 { margin-top:30px; }
+        p { margin:10px 0 16px; } .lead { max-width:760px; color:#eee7fb; font-size:18px; }
+        main { padding:28px 0 70px; } nav { padding:20px; background:white; border:1px solid var(--line); border-radius:10px; box-shadow:0 8px 25px #5127a00d; }
+        nav strong { display:block; margin-bottom:8px; } nav a { display:inline-block; margin:4px 18px 4px 0; color:var(--purple); }
+        section { scroll-margin-top:20px; } .note,.warning { padding:15px 18px; margin:18px 0; border-left:4px solid var(--purple); background:var(--soft); }
+        .warning { border-left-color:#d89000; background:#fff8e8; } code { padding:2px 5px; color:#5b319d; background:#f0e9ff; border-radius:4px; }
+        pre { overflow:auto; padding:16px 18px; color:#f7f2ff; background:var(--code); border-radius:8px; } pre code { padding:0; color:inherit; background:none; }
+        table { width:100%; border-collapse:collapse; margin:16px 0 24px; background:white; } th,td { padding:11px 13px; text-align:left; vertical-align:top; border:1px solid var(--line); } th { color:white; background:var(--deep); }
+        ul,ol { padding-left:24px; } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; } .card { padding:18px; background:white; border:1px solid var(--line); border-radius:8px; }
+        footer { padding:28px 0; color:var(--muted); border-top:1px solid var(--line); } .small { color:var(--muted); font-size:13px; }
+        @media print { nav { box-shadow:none; } header { color:#111; background:white; border-bottom:2px solid #222; } .lead { color:#333; } a { color:#111; text-decoration:none; } }
+    </style>
+</head>
+<body>
+<header><div class="wrap"><h1>Dokumentasi AssetHub</h1><p class="lead">Panduan lengkap untuk menyiapkan, menjalankan, menggunakan, dan merawat aplikasi IT Asset Management berbasis Laravel, Blade, Bootstrap, MariaDB, dan XAMPP.</p><p>Target pembaca: pengguna awam Windows yang ingin menjalankan project di PC lokal.</p></div></header>
+<main class="wrap">
+<nav>
+    <strong>Daftar isi</strong>
+    <a href="#gambaran">Gambaran umum</a><a href="#persiapan">Persiapan</a><a href="#clone">Clone project</a><a href="#database">Database</a><a href="#jalankan">Menjalankan aplikasi</a><a href="#akun">Akun dan role</a><a href="#fitur">Fitur</a><a href="#approval">Approval</a><a href="#backup">Backup</a><a href="#masalah">Troubleshooting</a>
+</nav>
+
+<section id="gambaran">
+<h2>1. Gambaran Umum</h2>
+<p>AssetHub adalah aplikasi untuk mencatat dan mengelola aset IT perusahaan. Aplikasi ini berjalan secara lokal menggunakan web server bawaan Laravel dan Vite untuk asset frontend.</p>
+<div class="grid">
+    <div class="card"><strong>Backend</strong><br>Laravel 12, PHP 8.2 atau lebih baru, Blade.</div>
+    <div class="card"><strong>Frontend</strong><br>Bootstrap 5 dan Bootstrap Icons melalui Vite.</div>
+    <div class="card"><strong>Database</strong><br>MariaDB/MySQL dari XAMPP.</div>
+    <div class="card"><strong>QR Code</strong><br>QR Code unik untuk setiap aset, dapat dicetak dan dipindai.</div>
+</div>
+</section>
+
+<section id="persiapan">
+<h2>2. Persiapan PC</h2>
+<p>Install software berikut sebelum melakukan clone:</p>
+<table><thead><tr><th>Software</th><th>Kegunaan</th><th>Pemeriksaan</th></tr></thead><tbody>
+<tr><td>XAMPP</td><td>PHP dan MariaDB/MySQL lokal.</td><td><code>php --version</code></td></tr>
+<tr><td>Composer</td><td>Menginstall dependency PHP/Laravel.</td><td><code>composer --version</code></td></tr>
+<tr><td>Node.js LTS</td><td>Menjalankan Vite dan dependency frontend.</td><td><code>node --version</code></td></tr>
+<tr><td>npm</td><td>Package manager frontend.</td><td><code>npm --version</code></td></tr>
+<tr><td>Git</td><td>Clone dan mengambil update repository.</td><td><code>git --version</code></td></tr>
+</tbody></table>
+<h3>Versi dan konfigurasi yang disarankan</h3>
+<ul><li>Windows 10 atau 11.</li><li>PHP 8.2 atau lebih baru. Pastikan extension <code>openssl</code>, <code>mbstring</code>, <code>pdo_mysql</code>, <code>fileinfo</code>, dan <code>ctype</code> aktif.</li><li>Gunakan Node.js versi LTS.</li><li>Pastikan folder PHP XAMPP masuk ke PATH Windows, atau jalankan command dari shell XAMPP.</li></ul>
+<div class="note"><strong>Catatan:</strong> XAMPP Control Panel perlu dijalankan sebagai Administrator jika Windows menolak start Apache atau MySQL.</div>
+</section>
+
+<section id="clone">
+<h2>3. Clone Project ke PC Lokal</h2>
+<ol>
+    <li>Install Git.</li>
+    <li>Buka PowerShell atau Git Bash.</li>
+    <li>Pindah ke folder tempat project akan disimpan, misalnya Documents.</li>
+</ol>
+<pre><code>cd "$HOME\Documents"
+git clone https://github.com/SetiyawanID/assetmanagement.git
+cd assetmanagement</code></pre>
+<p>Pastikan file seperti <code>artisan</code>, <code>composer.json</code>, <code>package.json</code>, dan folder <code>database</code> terlihat di folder project.</p>
+</section>
+
+<section id="database">
+<h2>4. Menyiapkan MariaDB dari XAMPP</h2>
+<h3>4.1 Start MySQL</h3>
+<ol><li>Buka XAMPP Control Panel.</li><li>Klik <strong>Start</strong> pada MySQL.</li><li>Apache tidak wajib dinyalakan karena aplikasi menggunakan <code>php artisan serve</code>. Apache boleh digunakan jika diperlukan untuk project lain.</li></ol>
+<h3>4.2 Membuat database</h3>
+<p>Buka <code>http://localhost/phpmyadmin</code>, klik <strong>New</strong>, lalu buat database bernama <code>assethub</code>. Gunakan collation <code>utf8mb4_unicode_ci</code> jika tersedia.</p>
+<p>Alternatif melalui SQL:</p>
+<pre><code>CREATE DATABASE assethub
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;</code></pre>
+<h3>4.3 Konfigurasi file .env</h3>
+<p>Salin file konfigurasi contoh:</p>
+<pre><code>Copy-Item .env.example .env</code></pre>
+<p>Buka file <code>.env</code> dengan VS Code, lalu pastikan bagian database seperti berikut:</p>
+<pre><code>APP_NAME=AssetHub
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=assethub
+DB_USERNAME=root
+DB_PASSWORD=</code></pre>
+<p>Pada instalasi XAMPP standar, user database adalah <code>root</code> dan password kosong. Jika password root Anda berbeda, isi <code>DB_PASSWORD</code>.</p>
+</section>
+
+<section id="install">
+<h2>5. Install Dependency dan Menyiapkan Aplikasi</h2>
+<p>Jalankan command berikut dari folder project:</p>
+<pre><code>composer install
+php artisan key:generate
+npm install
+php artisan migrate --seed</code></pre>
+<div class="warning"><strong>Peringatan:</strong> <code>php artisan migrate:fresh --seed</code> akan menghapus semua tabel dan data. Gunakan hanya pada database baru atau saat sengaja ingin mengulang data demo.</div>
+<p>Untuk project yang sudah memiliki database lama, gunakan <code>php artisan migrate</code> saja. Jangan menjalankan <code>migrate:fresh</code> karena akan menghapus data aset.</p>
+<h3>Data demo setelah seed</h3>
+<table><thead><tr><th>Nama</th><th>Email</th><th>Password</th><th>Role</th></tr></thead><tbody>
+<tr><td>Super Admin</td><td><code>admin@assethub.test</code></td><td><code>password</code></td><td>Super Admin</td></tr>
+<tr><td>Budi Santoso</td><td><code>budi@assethub.test</code></td><td><code>password</code></td><td>User</td></tr>
+</tbody></table>
+<p>Credential demo hanya untuk instalasi lokal. Segera ganti password sebelum aplikasi dipakai dengan data nyata.</p>
+</section>
+
+<section id="jalankan">
+<h2>6. Menjalankan AssetHub</h2>
+<p>Gunakan dua terminal PowerShell yang berbeda.</p>
+<h3>Terminal 1: Laravel</h3>
+<pre><code>cd "$HOME\Documents\assetmanagement"
+php artisan serve</code></pre>
+<p>Buka aplikasi di <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a>.</p>
+<h3>Terminal 2: Vite</h3>
+<pre><code>cd "$HOME\Documents\assetmanagement"
+npm run dev</code></pre>
+<p>Vite biasanya berjalan di <a href="http://localhost:5173">http://localhost:5173</a>. Tab terminal harus tetap terbuka selama development.</p>
+<div class="note"><strong>Command yang benar:</strong> gunakan <code>php artisan serve</code>, bukan <code>php artisan server</code>. Gunakan <code>npm run dev</code>, bukan <code>npm start</code>.</div>
+<h3>Mode tanpa Vite</h3>
+<p>Untuk menjalankan hasil build frontend:</p>
+<pre><code>npm run build
+php artisan serve</code></pre>
+<p>Mode ini berguna untuk simulasi tampilan production. Jalankan ulang <code>npm run build</code> setelah mengubah CSS atau JavaScript.</p>
+</section>
+
+<section id="akun">
+<h2>7. Akun dan Hak Akses</h2>
+<table><thead><tr><th>Role</th><th>Akses utama</th></tr></thead><tbody>
+<tr><td>Super Admin</td><td>Akses semua workspace, membuat Admin/User langsung, CRUD semua master data, approve/reject semua pengajuan, force reset password Admin lain, dan melihat historical approval.</td></tr>
+<tr><td>Admin</td><td>Mengelola aset, membuat User melalui approval, mengajukan perubahan akun/divisi/kategori/status, melihat status pengajuan sendiri, dan mengganti password sendiri.</td></tr>
+<tr><td>User</td><td>Tidak memiliki akses workspace IT. User hanya menjadi pemegang/assignee aset dan tidak dapat login ke workspace.</td></tr>
+</tbody></table>
+<p>Tidak ada pendaftaran publik. Akun baru dibuat dari menu <strong>Kelola akun</strong> oleh Admin atau Super Admin.</p>
+</section>
+
+<section id="fitur">
+<h2>8. Fitur AssetHub</h2>
+<h3>8.1 Dashboard/Ringkasan</h3><p>Menampilkan total aset, aset tersedia, aset assigned, aset maintenance, aset terbaru, komposisi kategori, dan jumlah lokasi.</p>
+<h3>8.2 Semua Aset</h3><ul><li>CRUD aset: asset tag, nama, kategori, serial number, brand, model, lokasi, pemegang, status, kondisi, pembelian, garansi, dan catatan.</li><li>Search nama, asset tag, dan serial number.</li><li>Filter berdasarkan kategori dan status.</li><li>Pagination agar daftar besar tetap ringan.</li><li>QR Code unik otomatis untuk setiap aset.</li></ul>
+<h3>8.3 QR Code Aset</h3><p>Ikon QR Code pada kolom Aksi membuka popup print. QR Code dicetak dengan ukuran 2 x 2 cm, nama aset dan serial number berada di sampingnya, serta outline tipis untuk batas potong stiker. Saat dipindai, QR Code membuka halaman detail aset setelah autentikasi.</p>
+<h3>8.4 Kelola Akun</h3><ul><li>Search nama/email, filter role, filter divisi, CRUD akun, dan pagination.</li><li>Admin hanya dapat mengelola akun User.</li><li>Edit dan hapus oleh Admin masuk approval.</li><li>Super Admin dapat mengelola semua akun sesuai rule role.</li><li>Ganti password tersedia pada menu user di pojok kanan atas.</li><li>Super Admin dapat force reset password akun Admin lain.</li></ul>
+<h3>8.5 List Divisi</h3><p>CRUD divisi, search nama/deskripsi, filter divisi yang sudah atau belum memiliki akun, dan approval untuk tambah/edit/hapus oleh Admin.</p>
+<h3>8.6 Kelola Kategori</h3><p>CRUD kategori, icon Bootstrap Icons, search, filter kategori yang digunakan atau belum digunakan aset, serta approval untuk operasi Admin.</p>
+<h3>8.7 Kelola Status</h3><p>CRUD status aset dengan slug dan warna badge. Status tampil dinamis pada form dan filter aset. Operasi Admin memerlukan approval.</p>
+<h3>8.8 Notifikasi dan Approval</h3><p>Ikon bell muncul di topbar. Super Admin melihat jumlah pengajuan pending. Admin melihat badge saat pengajuannya sudah disetujui atau ditolak. Riwayat tetap disimpan sebagai Pending approval, Approved, atau Rejected.</p>
+<h3>8.9 Tema dan Responsive</h3><p>AssetHub menggunakan tema gradasi purple, Bootstrap responsive layout, tooltip ikon, dan tampilan yang menyesuaikan desktop maupun mobile.</p>
+</section>
+
+<section id="approval">
+<h2>9. Alur Approval</h2>
+<ol>
+    <li>Admin membuka form atau aksi CRUD.</li>
+    <li>Admin mengirim perubahan.</li>
+    <li>Data approval disimpan sebagai Pending approval dan data aktif belum berubah.</li>
+    <li>Super Admin menerima badge pada ikon bell.</li>
+    <li>Super Admin membuka halaman Items yang perlu di approve.</li>
+    <li>Super Admin memilih Approve atau Reject.</li>
+    <li>Jika Approved, perubahan diterapkan. Jika Rejected, data aktif tetap seperti sebelumnya.</li>
+</ol>
+<p>Sistem mencegah beberapa Admin mengajukan perubahan pending pada item yang sama. Warning menampilkan nama Admin yang sudah mengajukan perubahan tersebut.</p>
+</section>
+
+<section id="backup">
+<h2>10. Backup dan Perawatan</h2>
+<h3>Backup database melalui phpMyAdmin</h3>
+<ol><li>Buka <code>http://localhost/phpmyadmin</code>.</li><li>Pilih database <code>assethub</code>.</li><li>Klik <strong>Export</strong>.</li><li>Pilih format SQL dan klik Export.</li></ol>
+<h3>Update project</h3>
+<pre><code>git pull origin main
+composer install
+npm install
+php artisan migrate
+npm run build</code></pre>
+<p>Jangan menghapus file <code>.env</code> saat update. File tersebut berisi konfigurasi lokal dan tidak seharusnya di-commit ke Git.</p>
+<h3>Cache setelah perubahan</h3>
+<pre><code>php artisan optimize:clear
+php artisan view:cache</code></pre>
+</section>
+
+<section id="masalah">
+<h2>11. Troubleshooting</h2>
+<table><thead><tr><th>Masalah</th><th>Solusi</th></tr></thead><tbody>
+<tr><td><code>php</code> tidak dikenali</td><td>Tambahkan folder PHP XAMPP, biasanya <code>C:\xampp\php</code>, ke Environment Variables PATH. Tutup dan buka ulang terminal.</td></tr>
+<tr><td>Composer gagal install</td><td>Pastikan PHP aktif, internet tersedia, dan extension PHP yang disebut pada bagian persiapan aktif.</td></tr>
+<tr><td>SQLSTATE access denied</td><td>Periksa MySQL XAMPP sedang running dan cocokkan DB_USERNAME/DB_PASSWORD di <code>.env</code>.</td></tr>
+<tr><td>Unknown database assethub</td><td>Buat database <code>assethub</code> melalui phpMyAdmin atau SQL.</td></tr>
+<tr><td>Table not found</td><td>Jalankan <code>php artisan migrate</code>. Untuk database demo kosong gunakan <code>php artisan migrate --seed</code>.</td></tr>
+<tr><td>Port 8000 sudah dipakai</td><td>Jalankan <code>php artisan serve --port=8001</code>, lalu buka <code>http://127.0.0.1:8001</code>.</td></tr>
+<tr><td>Port Vite sudah dipakai</td><td>Vite biasanya memilih port berikutnya secara otomatis, atau hentikan proses Vite lama dengan Ctrl+C.</td></tr>
+<tr><td>CSS/JS tidak berubah</td><td>Pastikan <code>npm run dev</code> aktif. Jika memakai mode build, jalankan <code>npm run build</code> lalu hard refresh browser dengan Ctrl+F5.</td></tr>
+<tr><td>Error setelah mengubah .env</td><td>Jalankan <code>php artisan optimize:clear</code>, lalu restart <code>php artisan serve</code>.</td></tr>
+<tr><td>Data hilang setelah migrate:fresh</td><td>Perintah tersebut memang menghapus data. Restore database dari backup SQL dan hindari command itu pada database production.</td></tr>
+</tbody></table>
+</section>
+
+<section>
+<h2>12. Checklist Instalasi Singkat</h2>
+<pre><code>git clone https://github.com/SetiyawanID/assetmanagement.git
+cd assetmanagement
+Copy-Item .env.example .env
+# Edit .env: DB_CONNECTION=mysql, DB_DATABASE=assethub, DB_USERNAME=root
+composer install
+php artisan key:generate
+npm install
+php artisan migrate --seed
+
+# Terminal 1
+php artisan serve
+
+# Terminal 2
+npm run dev</code></pre>
+<p>Setelah itu buka <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> dan login menggunakan akun demo.</p>
+</section>
+
+<footer><div class="wrap">Dokumentasi AssetHub | Untuk penggunaan lokal/development. Sesuaikan password, APP_URL, dan konfigurasi keamanan sebelum deployment production.</div></footer>
+</main>
+</body>
+</html>
