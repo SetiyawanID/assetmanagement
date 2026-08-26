@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApprovalRequest extends Model
 {
-    protected $fillable = ['type', 'payload', 'requested_by', 'reviewed_by', 'status', 'reviewed_at', 'read_at'];
+    protected $fillable = ['type', 'action', 'target_id', 'payload', 'requested_by', 'reviewed_by', 'status', 'reviewed_at', 'read_at'];
 
     protected function casts(): array
     {
@@ -30,6 +30,16 @@ class ApprovalRequest extends Model
         return $query->where('status', 'pending');
     }
 
+    public static function pendingForTarget(string $type, int $targetId): ?self
+    {
+        return static::pending()
+            ->where('type', $type)
+            ->where('target_id', $targetId)
+            ->with('requester')
+            ->latest()
+            ->first();
+    }
+
     public function getTypeLabelAttribute(): string
     {
         return match ($this->type) {
@@ -37,6 +47,16 @@ class ApprovalRequest extends Model
             'status' => 'Status',
             'user' => 'Akun User',
             default => ucfirst($this->type),
+        };
+    }
+
+    public function getActionLabelAttribute(): string
+    {
+        return match ($this->action) {
+            'create' => 'Tambah',
+            'update' => 'Edit',
+            'delete' => 'Hapus',
+            default => ucfirst($this->action),
         };
     }
 }

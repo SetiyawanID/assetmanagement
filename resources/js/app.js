@@ -1,9 +1,8 @@
 import './bootstrap';
-import * as bootstrap from 'bootstrap';
-window.bootstrap = bootstrap;
+import { Dropdown, Tooltip } from 'bootstrap';
 
 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
-    new bootstrap.Tooltip(element);
+    new Tooltip(element);
 });
 
 document.querySelectorAll('.js-qr-popup').forEach((element) => {

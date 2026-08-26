@@ -22,8 +22,8 @@ class AssetController extends Controller
 
     public function index(Request $request): View
     {
-        $assets = Asset::with(['category', 'location', 'assignee', 'statusDefinition'])->when($request->filled('search'), fn ($q) => $q->where(fn ($x) => $x->where('asset_tag', 'like', '%'.$request->search.'%')->orWhere('name', 'like', '%'.$request->search.'%')->orWhere('serial_number', 'like', '%'.$request->search.'%')))->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))->when($request->filled('category'), fn ($q) => $q->where('category_id', $request->category))->latest()->paginate(10)->withQueryString();
-        return view('assets.index', array_merge(['assets' => $assets, 'categories' => Category::orderBy('name')->get()], $this->formData()));
+        $assets = Asset::with(['category', 'location', 'assignee', 'statusDefinition'])->when($request->filled('search'), fn ($q) => $q->where(fn ($x) => $x->where('asset_tag', 'like', '%'.$request->search.'%')->orWhere('name', 'like', '%'.$request->search.'%')->orWhere('serial_number', 'like', '%'.$request->search.'%')))->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))->when($request->filled('category'), fn ($q) => $q->where('category_id', $request->category))->latest()->simplePaginate(10)->withQueryString();
+        return view('assets.index', array_merge(['assets' => $assets], $this->formData()));
     }
 
     public function create(): View { return view('assets.create', $this->formData()); }

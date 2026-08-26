@@ -10,6 +10,8 @@
     <a href="{{ route('users.create') }}" class="btn btn-primary"><i class="bi bi-person-plus me-2"></i>Buat akun baru</a>
 </div>
 
+<div class="panel mb-3"><form class="p-3 row g-2" method="GET"><div class="col-lg-5"><div class="input-group"><span class="input-group-text bg-white"><i class="bi bi-search"></i></span><input class="form-control border-start-0" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..."></div></div>@if(auth()->user()->isSuperAdmin())<div class="col-sm-6 col-lg-3"><select class="form-select" name="role"><option value="">Semua role</option><option value="super_admin" @selected(request('role') === 'super_admin')>Super Admin</option><option value="admin" @selected(request('role') === 'admin')>Admin</option><option value="user" @selected(request('role') === 'user')>User</option></select></div>@endif<div class="col-sm-6 col-lg-3"><select class="form-select" name="division_id"><option value="">Semua divisi</option>@foreach($divisions as $division)<option value="{{ $division->id }}" @selected(request('division_id') == $division->id)>{{ $division->name }}</option>@endforeach</select></div><div class="col-lg-1 d-grid"><button class="btn btn-dark" data-bs-toggle="tooltip" data-bs-title="Filter" aria-label="Filter"><i class="bi bi-funnel"></i></button></div></form></div>
+
 <div class="panel">
     <div class="table-responsive">
         <table class="table align-middle mb-0">
@@ -39,5 +41,6 @@
             </tbody>
         </table>
     </div>
+    @if($users->hasPages())<div class="p-3 border-top">{{ $users->links() }}</div>@endif
 </div>
 @endsection

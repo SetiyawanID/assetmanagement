@@ -15,13 +15,16 @@ class UserController extends Controller
 {
     public function create(): View { return view('users.create', ['divisions' => Division::orderBy('name')->get(), 'canCreateAdmin' => request()->user()->isSuperAdmin()]); }
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $query = User::with('division')->orderBy('name');
         if (! request()->user()->isSuperAdmin()) {
             $query->where('role', 'user');
         }
-        return view('users.index', ['users' => $query->get()]);
+        $query->when($request->filled('search'), fn ($q) => $q->where(fn ($x) => $x->where('name', 'like', '%'.$request->search.'%')->orWhere('email', 'like', '%'.$request->search.'%')))
+            ->when($request->filled('role') && request()->user()->isSuperAdmin(), fn ($q) => $q->where('role', $request->role))
+            ->when($request->filled('division_id'), fn ($q) => $q->where('division_id', $request->division_id));
+        return view('users.index', ['users' => $query->simplePaginate(10)->withQueryString(), 'divisions' => Division::orderBy('name')->get()]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -74,6 +77,13 @@ class UserController extends Controller
     {
         $this->authorizeAccountManagement($request, $user);
         $data = $request->validate(['name' => ['required', 'string', 'max:100'], 'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id], 'division_id' => ['nullable', 'exists:divisions,id']]);
+        if (! $request->user()->isSuperAdmin()) {
+            if ($pending = ApprovalRequest::pendingForTarget('user', $user->id)) {
+                return back()->with('warning', 'Pengajuan perubahan untuk akun ini masih menunggu approval (diajukan oleh: '.$pending->requester->name.').');
+            }
+            ApprovalRequest::create(['type' => 'user', 'action' => 'update', 'target_id' => $user->id, 'payload' => $data, 'requested_by' => $request->user()->id]);
+            return redirect()->route('users.index')->with('success', 'Perubahan akun diajukan dan menunggu approval Super Admin.');
+        }
         $user->update($data);
         return redirect()->route('users.index')->with('success', 'Data akun '.$user->name.' berhasil diperbarui.');
     }
@@ -82,7 +92,15 @@ class UserController extends Controller
     {
         $this->authorizeAccountManagement($request, $user);
         abort_if($user->id === $request->user()->id, 422, 'Akun yang sedang digunakan tidak dapat dihapus.');
-        $name = $user->name; $user->delete();
+        $name = $user->name;
+        if (! $request->user()->isSuperAdmin()) {
+            if ($pending = ApprovalRequest::pendingForTarget('user', $user->id)) {
+                return back()->with('warning', 'Pengajuan perubahan untuk akun ini masih menunggu approval (diajukan oleh: '.$pending->requester->name.').');
+            }
+            ApprovalRequest::create(['type' => 'user', 'action' => 'delete', 'target_id' => $user->id, 'payload' => ['name' => $user->name, 'email' => $user->email], 'requested_by' => $request->user()->id]);
+            return redirect()->route('users.index')->with('success', 'Penghapusan akun diajukan dan menunggu approval Super Admin.');
+        }
+        $user->delete();
         return redirect()->route('users.index')->with('success', 'Akun '.$name.' berhasil dihapus.');
     }
 

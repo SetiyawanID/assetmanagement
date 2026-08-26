@@ -14,8 +14,7 @@
             <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i class="bi bi-grid-1x2-fill me-2"></i> Ringkasan</a>
             <a class="nav-link {{ request()->routeIs('assets.*') ? 'active' : '' }}" href="{{ route('assets.index') }}"><i class="bi bi-laptop me-2"></i> Semua Aset</a>
             @if(auth()->user()->isAdministrator())
-            <a class="nav-link {{ request()->routeIs('users.create') ? 'active' : '' }}" href="{{ route('users.create') }}"><i class="bi bi-person-plus me-2"></i> Buat akun baru</a>
-            <a class="nav-link {{ request()->routeIs('users.index', 'users.edit', 'users.update', 'users.destroy', 'users.password.update') ? 'active' : '' }}" href="{{ route('users.index') }}"><i class="bi bi-people me-2"></i> Kelola akun</a>
+            <a class="nav-link {{ request()->routeIs('users.index', 'users.create', 'users.edit', 'users.update', 'users.destroy', 'users.password.update') ? 'active' : '' }}" href="{{ route('users.index') }}"><i class="bi bi-people me-2"></i> Kelola akun</a>
             <a class="nav-link {{ request()->routeIs('divisions.*') ? 'active' : '' }}" href="{{ route('divisions.index') }}"><i class="bi bi-diagram-3 me-2"></i> List Divisi</a>
             <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}"><i class="bi bi-tags me-2"></i> Kelola Kategori</a>
             <a class="nav-link {{ request()->routeIs('statuses.*') ? 'active' : '' }}" href="{{ route('statuses.index') }}"><i class="bi bi-toggle-on me-2"></i> Kelola Status</a>
@@ -30,6 +29,7 @@
         </header>
         <div class="p-3 p-lg-4">
             @if(session('success'))<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check-circle me-2"></i>{{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>@endif
+            @if(session('warning'))<div class="alert alert-warning alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-triangle me-2"></i>{{ session('warning') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>@endif
               @if($errors->any())<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle me-2"></i><strong>Periksa kembali isian Anda.</strong><ul class="mb-0 mt-2 ps-3">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>@endif
             @yield('content')
         </div>

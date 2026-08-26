@@ -55,6 +55,13 @@ class StatusController extends Controller
         if ($status->assets()->exists() && $data['slug'] !== $status->slug) {
             return back()->withErrors(['name' => 'Slug status yang sedang digunakan oleh aset tidak dapat diubah.'])->withInput();
         }
+        if (! $request->user()->isSuperAdmin()) {
+            if ($pending = ApprovalRequest::pendingForTarget('status', $status->id)) {
+                return back()->with('warning', 'Pengajuan perubahan untuk status ini masih menunggu approval (diajukan oleh: '.$pending->requester->name.').');
+            }
+            ApprovalRequest::create(['type' => 'status', 'action' => 'update', 'target_id' => $status->id, 'payload' => $data, 'requested_by' => $request->user()->id]);
+            return redirect()->route('statuses.index')->with('success', 'Perubahan status diajukan dan menunggu approval Super Admin.');
+        }
         $status->update($data);
         return redirect()->route('statuses.index')->with('success', 'Status berhasil diperbarui.');
     }
@@ -63,6 +70,13 @@ class StatusController extends Controller
     {
         if ($status->assets()->exists()) {
             return back()->withErrors(['status' => 'Status yang masih digunakan oleh aset tidak dapat dihapus.']);
+        }
+        if (! request()->user()->isSuperAdmin()) {
+            if ($pending = ApprovalRequest::pendingForTarget('status', $status->id)) {
+                return back()->with('warning', 'Pengajuan perubahan untuk status ini masih menunggu approval (diajukan oleh: '.$pending->requester->name.').');
+            }
+            ApprovalRequest::create(['type' => 'status', 'action' => 'delete', 'target_id' => $status->id, 'payload' => ['name' => $status->name], 'requested_by' => request()->user()->id]);
+            return redirect()->route('statuses.index')->with('success', 'Penghapusan status diajukan dan menunggu approval Super Admin.');
         }
         $status->delete();
         return redirect()->route('statuses.index')->with('success', 'Status berhasil dihapus.');
